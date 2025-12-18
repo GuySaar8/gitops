@@ -24,13 +24,10 @@ valuesObject:
           memory: "1Gi"
 
   grafana:
-    enabled: true
-    adminPassword: admin
-    service:
-      type: ClusterIP
+    enabled: false
 
   alertmanager:
-    enabled: true
+    enabled: false
 
 syncOptions:
   - CreateNamespace=true
