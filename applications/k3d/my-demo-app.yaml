@@ -1,28 +1,36 @@
-name: nginx
-namespace: default
+name: prometheus
+namespace: monitoring
 overrideProject: default
 
 annotations:
-  description: "NGINX Ingress Controller"
+  description: "Prometheus monitoring stack"
   managed-by: "argocd-application-set"
 
 helm:
-  chart: ingress-nginx
-  repository: https://kubernetes.github.io/ingress-nginx
-  version: "5.3.0"
+  chart: kube-prometheus-stack
+  repository: https://prometheus-community.github.io/helm-charts
+  version: "56.6.2"
 
 valuesObject:
-  controller:
-    replicaCount: 1
-    resources:
-      requests:
-        memory: "128Mi"
-        cpu: "100m"
-      limits:
-        memory: "256Mi"
-        cpu: "200m"
+  prometheus:
+    prometheusSpec:
+      retention: 10d
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "512Mi"
+        limits:
+          cpu: "500m"
+          memory: "1Gi"
+
+  grafana:
+    enabled: true
+    adminPassword: admin
     service:
       type: ClusterIP
+
+  alertmanager:
+    enabled: true
 
 syncOptions:
   - CreateNamespace=true
