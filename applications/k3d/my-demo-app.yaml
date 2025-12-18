@@ -1,33 +1,30 @@
-name: prometheus
-namespace: monitoring
+name: hello-world
+namespace: default
 overrideProject: default
 
 annotations:
-  description: "Prometheus monitoring stack"
+  description: "Simple Hello World application"
   managed-by: "argocd-application-set"
 
 helm:
-  chart: kube-prometheus-stack
-  repository: https://prometheus-community.github.io/helm-charts
-  version: "56.6.2"
+  chart: hello-world
+  repository: https://helm.github.io/examples
+  version: "0.1.0"
 
 valuesObject:
-  prometheus:
-    prometheusSpec:
-      retention: 10d
-      resources:
-        requests:
-          cpu: "200m"
-          memory: "512Mi"
-        limits:
-          cpu: "500m"
-          memory: "1Gi"
+  replicaCount: 1
 
-  grafana:
-    enabled: false
+  service:
+    type: ClusterIP
+    port: 80
 
-  alertmanager:
-    enabled: false
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "32Mi"
+    limits:
+      cpu: "50m"
+      memory: "64Mi"
 
 syncOptions:
   - CreateNamespace=true
