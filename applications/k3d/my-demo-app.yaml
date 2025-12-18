@@ -3,30 +3,26 @@ namespace: default
 overrideProject: default
 
 annotations:
-  description: "Nginx web server application"
+  description: "NGINX Ingress Controller"
   managed-by: "argocd-application-set"
 
 helm:
-  chart: nginx
-  repository: https://helm.nginx.com/stable
-  version: "1.1.6"   # stable as of nginxinc chart line
+  chart: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: "5.3.0"
 
 valuesObject:
   controller:
     replicaCount: 1
-
-  service:
-    type: ClusterIP
-    ports:
-      http: 80
-
-  resources:
-    requests:
-      memory: "128Mi"
-      cpu: "100m"
-    limits:
-      memory: "256Mi"
-      cpu: "200m"
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+    service:
+      type: ClusterIP
 
 syncOptions:
   - CreateNamespace=true
