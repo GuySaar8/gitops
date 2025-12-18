@@ -1,19 +1,25 @@
 name: nginx
 namespace: default
 overrideProject: default
+
 annotations:
   description: "Nginx web server application"
   managed-by: "argocd-application-set"
+
 helm:
   chart: nginx
-  repository: https://charts.bitnami.com/bitnami
-  version: "15.4.3"
+  repository: https://helm.nginx.com/stable
+  version: "1.1.6"   # stable as of nginxinc chart line
+
 valuesObject:
+  controller:
+    replicaCount: 1
+
   service:
     type: ClusterIP
     ports:
       http: 80
-  replicaCount: 1
+
   resources:
     requests:
       memory: "128Mi"
@@ -21,6 +27,7 @@ valuesObject:
     limits:
       memory: "256Mi"
       cpu: "200m"
+
 syncOptions:
   - CreateNamespace=true
   - PrunePropagationPolicy=foreground
