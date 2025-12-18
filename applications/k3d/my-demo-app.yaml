@@ -1,1 +1,27 @@
-name: my-demo-app
+name: nginx
+namespace: default
+overrideProject: default
+annotations:
+  description: "Nginx web server application"
+  managed-by: "argocd-application-set"
+helm:
+  chart: nginx
+  repository: https://charts.bitnami.com/bitnami
+  version: "15.4.3"
+valuesObject:
+  service:
+    type: ClusterIP
+    ports:
+      http: 80
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+syncOptions:
+  - CreateNamespace=true
+  - PrunePropagationPolicy=foreground
+  - PruneLast=true
