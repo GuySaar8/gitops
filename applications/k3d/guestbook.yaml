@@ -10,6 +10,7 @@ annotations:
   environment: "development"
   team: "platform-engineering"
   version: "1.0.0"
+  test: "1234"
 
 info:
   - name: "Application Type"
