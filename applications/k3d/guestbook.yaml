@@ -21,6 +21,8 @@ info:
     value: "Enabled"
   - name: "Components"
     value: "Frontend, Backend, Redis"
+  - name: "Managed By App Set"
+    value: "True"
 
 ignoreDifferences:
   # Ignore image tag changes
