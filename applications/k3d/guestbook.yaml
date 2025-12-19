@@ -1,0 +1,59 @@
+name: guestbook
+namespace: default
+overrideProject: default
+
+annotations:
+  description: "Guestbook application demonstrating ArgoCD ApplicationSet features"
+  managed-by: "argocd-application-set"
+  argocd.argoproj.io/sync-wave: "0"
+  contact: "devops-team@example.com"
+  environment: "development"
+  team: "platform-engineering"
+  version: "1.0.0"
+
+info:
+  - name: "Application Type"
+    value: "Guestbook Demo"
+  - name: "Deployment Strategy"
+    value: "Rolling Update"
+  - name: "Health Check"
+    value: "Enabled"
+  - name: "Components"
+    value: "Frontend, Backend, Redis"
+
+ignoreDifferences:
+  # Ignore image tag changes
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+      - /spec/template/spec/containers/0/image
+  # Ignore replica count if managed by HPA
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+      - /spec/replicas
+  # Ignore service annotations added by cloud providers
+  - group: ""
+    kind: Service
+    jsonPointers:
+      - /metadata/annotations
+    jqPathExpressions:
+      - .metadata.annotations["cloud.google.com/neg-status"]
+      - .metadata.annotations["service.beta.kubernetes.io/aws-load-balancer-*"]
+  # Ignore resource requests/limits if adjusted by VPA
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+      - /spec/template/spec/containers/0/resources
+
+git:
+  repository: https://github.com/argoproj/argocd-example-apps.git
+  revision: HEAD
+  path: guestbook
+
+syncOptions:
+  - CreateNamespace=true
+  - PrunePropagationPolicy=foreground
+  - PruneLast=true
+  - RespectIgnoreDifferences=true
+
